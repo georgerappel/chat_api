@@ -15,10 +15,10 @@ class AuthMiddleware
         // getHeader returns an array with the authorization value, e.g. ["username"]
         // So we get the first position as the username
         $username = $request->getHeader('Authorization')[0];
-        $user_id = $this->getUserId($username);
-        if (!$user_id) {
-            throw new \Slim\Exception\HttpForbiddenException($request);
-        }
+        $user_id = $this->getUserId($username, $request);
+
+        // $user_id = 1;
+
         // Save the user ID in the request for usage in the controllers
         $request = $request->withAttribute('user_id', $user_id);
 
@@ -28,7 +28,12 @@ class AuthMiddleware
         return $response;
     }
 
-    private function getUserId($username) {
-        return (new UserController())->getUserFromName($username)['id'];
+    private function getUserId($username, $request) {
+        $user = (new UserController())->getUserFromName($username, $request);
+        if(!$user || $user == null) {
+            throw new \Slim\Exception\HttpForbiddenException($request);
+        }
+
+        return $user['id'];
     }
 }

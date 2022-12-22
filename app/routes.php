@@ -36,9 +36,13 @@ $app->group('/users', function (RouteCollectorProxy $group) {
 
 $app->group('/chat', function (RouteCollectorProxy $group) {
     // GET MESSAGES
-
-    // GET NEW_MESSAGES
+    $group->get('/{username}', function ($request, $response, array $args) {
+        return  (new ChatController)->get($request, $response, $args['username']);
+    })->setName('user-create');
 
     // POST MESSAGE
+    $group->post('/{username}', function ($request, $response, array $args) {
+        return  (new ChatController)->post($request, $response, $args['username']);
+    })->setName('user-create');
 
 })->add(new AuthMiddleware());
