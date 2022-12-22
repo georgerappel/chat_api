@@ -29,11 +29,21 @@ To run the project using docker:
 
 
 # API Reference
+## Authorization
+* For authorization, a simple logic expects the username in the Authorization header of a request, instead of bearer tokens
+
+## Users Routes
+Users are 'public', and no authorization is required to create, search or list users.
+
 * POST /users - Create user, expects the body `{"username": "myname"}`
     * IF the username is available, returns HTTP 200 OK with `{"id": 1234}`
     * IF the username is not available, returns HTTP 409 CONFLICT with `{"error": "Username taken"}`
 * GET /users?query={name} - Read all users, optionally provide a query for searching usernames, returns HTTP 200 OK with `{"users": [{"username": "myname", "id": 123, "created_at": "2022-12-22T12:00:00"}, ...]}`
 * GET /users/{username} - Read user, returns `{"username": "myname", "id": 123, "created_at": "2022-12-22T12:00:00"}`
+
+## Chat Routes
+Authorization is required for all routes.
+
 * GET /chat/{other_user}?before={message_id} - Reads messages from a chat, returns last 20 messages, optional Page parameter loads more messages.
     * IF the chat was never used, returns an empty array
     * ELSE returns up to 20 messages: `{"messages": [{"id": 1, "content": "Hi, this is my message", "sender": "myname", "created_at": "2022-12-22T12:00:00"}, {"id": 2, "content": "Hi myname, heres my message as well", "sender": "othername", "created_at": "2022-12-22T13:00:00"}], "first_message": 1, "last_message": 2}`
@@ -41,7 +51,8 @@ To run the project using docker:
 * POST /chat/{other_user} - Send a message to "other_user", expects the body `{"content": "Plain text message"}`
 * GET /chat/{other_user}/new_messages/{last_message} - Poll for new messages sent after the last_message from the previous route, this ID is provided in the GET /chat/{other_user} response.
 
-# Ideas
 
-Some other features that could be included:
-* Route /users/{id}/online to check wether the user is currently online, based on their last poll for messages
+# Ideas for improvement
+
+* Add a route `GET /users/{id}/online` to check wether the user is currently online, based on their last poll for messages, storing this in a simple 30sec cache or in a column on the user table.
+* Add indexes to the sender/recipient columns on the message table to speed up queries

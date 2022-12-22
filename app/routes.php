@@ -18,18 +18,27 @@ $app->get('/', function (RequestInterface $request, ResponseInterface $response,
 });
 
 $app->group('/users', function (RouteCollectorProxy $group) {
-    // USER LIST ALL
-    $group->get('', function ($request, $response) {
-        return (new UserController)->getUsers($request, $response);
-    })->setName('user-list');
-
     // USER CREATE
     $group->post('', function ($request, $response) {
         return  (new UserController)->createUser($request, $response);
     })->setName('user-create');
 
+    // USER LIST ALL
+    $group->get('', function ($request, $response) {
+        return (new UserController)->getUsers($request, $response);
+    })->setName('user-list');
+
     // USER READ
     $group->get('/{username}', function ($request, $response, array $args) {
-        return  (new UserController)->createUser($request, $response);
+        return  (new UserController)->getUser($request, $response, $args['username'],);
     })->setName('user-read');
 });
+
+$app->group('/chat', function (RouteCollectorProxy $group) {
+    // GET MESSAGES
+
+    // GET NEW_MESSAGES
+
+    // POST MESSAGE
+
+})->add(new AuthMiddleware());
