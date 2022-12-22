@@ -1,0 +1,20 @@
+{
+    "name": "georgerappel/chat_api",
+    "description": "Chat back-end w/ php, slim, sqlite",
+    "type": "project",
+    "require": {
+        "slim/slim": "^4.11",
+        "laminas/laminas-diactoros": "^2.24"
+    },
+    "autoload": {
+        "psr-4": {
+            "Georgerappel\\ChatApi\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "George Rappel",
+            "email": "george.concei@hotmail.com"
+        }
+    ]
+}
